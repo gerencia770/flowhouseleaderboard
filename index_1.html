@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Flow House Group Live – Managers LeaderBoard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+:root {
+  --bg:#f4f6fb; --white:#ffffff; --pink:#FF3F7A; --pink-light:#FFD6E5; --pink-pale:#FFF0F5;
+  --teal:#00C9A7; --teal-light:#CFFAF3; --blue:#4F7FFF; --blue-light:#E0E9FF;
+  --orange:#FF7A00; --orange-light:#FFF0E0; --purple:#7B5FFF; --purple-light:#EDE8FF;
+  --gold:#F5A623; --gold-bg:#FFF8EC; --silver:#8C9BAD; --silver-bg:#F4F6F9;
+  --bronze:#C97B3A; --bronze-bg:#FDF3E8;
+  --text:#1A1D2E; --text-mid:#5A6076; --text-soft:#9BA3B8; --border:#ECEEF5;
+  --radius:16px; --shadow:0 2px 16px rgba(0,0,0,0.06);
+}
+body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; max-width:480px; margin:0 auto; }
+
+.header { background:linear-gradient(160deg,#1A0A2E 0%,#2D1060 40%,#6B2FA0 100%); padding:20px 20px 0; position:relative; overflow:hidden; }
+.header-top { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+.live-badge { background:#FF3F7A; color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; letter-spacing:1px; display:flex; align-items:center; gap:4px; }
+.live-dot { width:6px; height:6px; background:#fff; border-radius:50%; animation:blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.agency-name { color:rgba(255,255,255,0.9); font-size:14px; font-weight:700; }
+.header-title { color:#fff; font-size:30px; font-weight:900; line-height:1.1; margin-bottom:4px; letter-spacing:-0.5px; }
+.header-sub { color:rgba(255,255,255,0.55); font-size:12px; font-weight:500; margin-bottom:20px; }
+.podium-wrap { position:absolute; right:0; top:0; bottom:0; width:180px; display:flex; align-items:flex-end; justify-content:center; pointer-events:none; }
+.podium { display:flex; align-items:flex-end; gap:6px; }
+.pod-bar { border-radius:8px 8px 0 0; display:flex; align-items:center; justify-content:center; }
+.pod-bar span { color:#fff; font-size:13px; font-weight:900; }
+.pod-2 { width:44px; height:64px; background:rgba(255,62,122,0.55); }
+.pod-1 { width:44px; height:90px; background:rgba(255,62,122,0.85); }
+.pod-3 { width:44px; height:48px; background:rgba(255,62,122,0.35); }
+.deco-circle { position:absolute; border-radius:50%; opacity:0.12; }
+.deco-c1 { width:200px; height:200px; background:#fff; top:-60px; right:-20px; }
+.deco-c2 { width:120px; height:120px; background:#FF3F7A; bottom:-30px; right:30px; }
+
+.date-pill { margin:16px 16px 0; background:var(--white); border:1px solid var(--border); border-radius:10px; padding:9px 14px; display:flex; align-items:center; gap:7px; font-size:13px; font-weight:600; color:var(--text-mid); width:fit-content; }
+
+.stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:14px 16px 0; }
+.stat-card { background:var(--white); border-radius:14px; padding:14px 10px; text-align:center; box-shadow:var(--shadow); }
+.stat-num { font-size:24px; font-weight:900; color:var(--text); }
+.stat-icon { font-size:14px; margin-bottom:2px; }
+.stat-label { font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+
+.meta-card { margin:14px 16px 0; background:var(--white); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+.meta-header { display:flex; align-items:center; gap:7px; margin-bottom:12px; }
+.meta-icon { font-size:18px; }
+.meta-title-txt { font-size:14px; font-weight:800; color:var(--text); }
+.meta-pct { margin-left:auto; font-size:13px; font-weight:700; color:var(--pink); }
+.progress-bg { height:10px; background:#F0F0F6; border-radius:99px; overflow:hidden; }
+.progress-bar { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--pink),var(--purple)); transition:width 0.8s ease; }
+.meta-footer { display:flex; justify-content:space-between; margin-top:6px; }
+.meta-foot-l { font-size:11px; color:var(--text-soft); font-weight:500; }
+.meta-goal-tag { font-size:11px; font-weight:700; color:var(--orange); }
+
+.tabs-wrap { padding:14px 16px 0; }
+.tabs { display:flex; background:var(--white); border-radius:12px; padding:4px; box-shadow:var(--shadow); }
+.tab-btn { flex:1; padding:9px 6px; border:none; background:transparent; font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:700; color:var(--text-soft); cursor:pointer; border-radius:9px; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:4px; }
+.tab-btn.active { background:var(--pink); color:#fff; box-shadow:0 2px 10px rgba(255,62,122,0.3); }
+
+/* refresh btn */
+.refresh-row { display:flex; align-items:center; justify-content:space-between; padding:12px 16px 0; }
+.refresh-btn { display:flex; align-items:center; gap:6px; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:7px 14px; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700; color:var(--text-mid); cursor:pointer; transition:all 0.2s; }
+.refresh-btn:hover { border-color:var(--pink); color:var(--pink); }
+.refresh-btn.spinning .ri { animation:spin 1s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+.last-updated { font-size:11px; color:var(--text-soft); font-weight:500; }
+
+.lb-section { margin:10px 16px 0; }
+.lb-list { display:flex; flex-direction:column; gap:8px; }
+.lb-row { background:var(--white); border-radius:14px; padding:13px 14px; display:flex; align-items:center; gap:12px; box-shadow:var(--shadow); cursor:pointer; transition:transform 0.15s; border:1.5px solid transparent; }
+.lb-row:active { transform:scale(0.98); }
+.lb-row.r1 { border-color:rgba(245,166,35,0.4); background:var(--gold-bg); }
+.lb-row.r2 { border-color:rgba(140,155,173,0.3); }
+.lb-row.r3 { border-color:rgba(201,123,58,0.3); background:var(--bronze-bg); }
+.lb-badge { width:36px; height:36px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; }
+.lb-badge.b1 { background:rgba(245,166,35,0.15); }
+.lb-badge.b2 { background:rgba(140,155,173,0.12); }
+.lb-badge.b3 { background:rgba(201,123,58,0.12); }
+.lb-badge.bn { background:var(--bg); color:var(--text-soft); font-size:13px; }
+.lb-info { flex:1; min-width:0; }
+.lb-name { font-size:14px; font-weight:800; color:var(--text); }
+.lb-groups { font-size:11px; font-weight:600; color:var(--text-soft); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lb-chips { display:flex; gap:5px; margin-top:5px; flex-wrap:wrap; }
+.chip { font-size:10px; font-weight:700; padding:2px 7px; border-radius:99px; }
+.chip-teal { background:var(--teal-light); color:#00876F; }
+.chip-blue { background:var(--blue-light); color:#2B5FCC; }
+.chip-pink { background:var(--pink-light); color:#CC1A55; }
+.chip-orange { background:var(--orange-light); color:#CC5500; }
+.chip-purple { background:var(--purple-light); color:#5533CC; }
+.lb-score { text-align:right; flex-shrink:0; }
+.lb-pts { font-size:17px; font-weight:900; color:var(--text); white-space:nowrap; }
+.bono-chip { font-size:10px; font-weight:700; background:var(--teal-light); color:#00876F; padding:2px 7px; border-radius:99px; margin-top:4px; display:inline-block; }
+.lb-meta-progress { margin-top:8px; }
+.lb-meta-track { height:6px; background:#F0F0F6; border-radius:99px; overflow:hidden; margin-bottom:4px; }
+.lb-meta-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--pink),var(--purple)); transition:width 0.8s ease; }
+.lb-meta-label { font-size:10px; font-weight:600; color:var(--text-soft); }
+.lb-pts { font-size:17px; font-weight:900; color:var(--text); white-space:nowrap; }
+.meta-ind-chip { font-size:10px; font-weight:700; background:var(--gold-bg); color:#B8820A; padding:2px 7px; border-radius:99px; margin-top:4px; display:inline-block; margin-left:4px; }
+
+/* breakdown tooltip */
+.lb-breakdown { font-size:10px; color:var(--text-soft); font-weight:500; margin-top:3px; }
+
+.empty-state { text-align:center; padding:36px 20px; color:var(--text-soft); font-size:13px; font-weight:600; }
+.loading-state { text-align:center; padding:36px 20px; color:var(--text-soft); font-size:13px; font-weight:600; }
+.error-state { text-align:center; padding:20px; background:#FFF0F0; border-radius:14px; color:#CC3333; font-size:12px; font-weight:600; }
+
+/* RULES */
+.rules-card { margin:14px 16px 0; background:#F8FFF9; border:1.5px solid #D0F5E8; border-radius:var(--radius); padding:16px; }
+.rules-title { display:flex; align-items:center; gap:7px; font-size:13px; font-weight:800; color:var(--teal); margin-bottom:12px; }
+.rule-row { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(0,201,167,0.1); }
+.rule-row:last-child { border-bottom:none; }
+.rule-label { font-size:13px; font-weight:500; color:var(--text); }
+.rule-pts { font-size:13px; font-weight:800; }
+.pts-green { color:var(--teal); }
+.pts-blue { color:var(--blue); }
+.pts-purple { color:var(--purple); }
+.pts-neutral { color:var(--text-mid); }
+.rules-note { margin-top:10px; background:rgba(0,201,167,0.08); border-radius:10px; padding:10px 12px; }
+.rules-note p { font-size:11px; color:var(--text-mid); font-weight:500; line-height:1.5; }
+.rules-note strong { color:var(--text); }
+
+.prizes-section { margin:14px 16px 0; }
+.prizes-title { font-size:13px; font-weight:800; color:var(--gold); margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.prize-card { border-radius:14px; padding:14px 16px; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
+.prize-card.gold-card { background:var(--gold-bg); border:1.5px solid rgba(245,166,35,0.35); }
+.prize-card.silver-card { background:var(--silver-bg); border:1.5px solid rgba(140,155,173,0.35); }
+.prize-card.bronze-card { background:var(--bronze-bg); border:1.5px solid rgba(201,123,58,0.35); }
+.prize-left { display:flex; align-items:center; gap:10px; }
+.prize-medal-icon { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; }
+.gold-card .prize-medal-icon { background:rgba(245,166,35,0.2); }
+.silver-card .prize-medal-icon { background:rgba(140,155,173,0.2); }
+.bronze-card .prize-medal-icon { background:rgba(201,123,58,0.2); }
+.prize-rank-name { font-size:14px; font-weight:800; }
+.gold-card .prize-rank-name { color:#B8820A; }
+.silver-card .prize-rank-name { color:var(--silver); }
+.bronze-card .prize-rank-name { color:var(--bronze); }
+.prize-desc { font-size:11px; font-weight:500; color:var(--text-soft); margin-top:2px; }
+.prize-amount { font-size:18px; font-weight:900; }
+.gold-card .prize-amount { color:#B8820A; }
+.silver-card .prize-amount { color:var(--silver); }
+.bronze-card .prize-amount { color:var(--bronze); }
+.prize-note-txt { margin:6px 16px 0; font-size:10px; color:var(--text-soft); font-weight:500; line-height:1.5; }
+
+.countdown-wrap { margin:16px 16px 24px; background:var(--white); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+.cd-title { font-size:11px; font-weight:700; color:var(--text-soft); text-align:center; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.cd-row { display:flex; justify-content:center; align-items:center; gap:6px; }
+.cd-unit { text-align:center; }
+.cd-num { background:var(--text); color:#fff; border-radius:10px; font-size:22px; font-weight:900; width:52px; height:52px; display:flex; align-items:center; justify-content:center; }
+.cd-label { font-size:10px; font-weight:700; color:var(--text-soft); text-transform:uppercase; letter-spacing:1px; margin-top:5px; }
+.cd-sep { font-size:22px; font-weight:900; color:var(--text-soft); padding-bottom:16px; }
+
+/* GRUPOS tab */
+.grupos-section { margin:14px 16px 24px; }
+.grupo-card { background:var(--white); border-radius:14px; padding:14px 16px; margin-bottom:8px; box-shadow:var(--shadow); }
+.grupo-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.grupo-name { font-size:13px; font-weight:800; color:var(--text); }
+.grupo-manager { font-size:11px; font-weight:600; color:var(--text-soft); }
+.grupo-total { font-size:13px; font-weight:900; color:var(--purple); }
+.creadora-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-top:1px solid var(--border); }
+.creadora-name { font-size:12px; font-weight:600; color:var(--text-mid); }
+.creadora-diam { font-size:12px; font-weight:700; color:var(--blue); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="deco-circle deco-c1"></div>
+  <div class="deco-circle deco-c2"></div>
+  <div class="header-top">
+    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+    <span class="agency-name">Flow House Group</span>
+  </div>
+  <div class="header-title">MONTHLY<br>LEADERBOARD</div>
+  <div class="header-sub">💃 Group Live Dance · TikTok LIVE</div>
+  <div class="podium-wrap">
+    <div class="podium">
+      <div class="pod-bar pod-2"><span>2</span></div>
+      <div class="pod-bar pod-1"><span>1</span></div>
+      <div class="pod-bar pod-3"><span>3</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="date-pill"><span>📅</span> May 1 – May 31, 2026 · 6:59 PM COL</div>
+
+<div class="stats-row" style="grid-template-columns:1fr 1fr">
+  <div class="stat-card"><div class="stat-icon">💎</div><div class="stat-num" id="statPct">—</div><div class="stat-label">Meta Gral.</div></div>
+  <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-num" id="statManagers">—</div><div class="stat-label">Managers</div></div>
+</div>
+
+<div class="meta-card">
+  <div class="meta-header">
+    <span class="meta-icon">💎</span>
+    <span class="meta-title-txt">Meta general del proyecto</span>
+    <span class="meta-pct" id="metaPct">—</span>
+  </div>
+  <div class="progress-bg"><div class="progress-bar" id="metaBar" style="width:0%"></div></div>
+  <div class="meta-footer">
+    <span class="meta-foot-l" id="metaFootL">Cargando datos...</span>
+    <span class="meta-goal-tag" id="metaFootR">Meta: — 💎</span>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-ranking" onclick="switchTab('ranking')">🏆 RANKING</button>
+    <button class="tab-btn" id="tab-reglas" onclick="switchTab('reglas')">📋 REGLAS</button>
+  </div>
+</div>
+
+<!-- RANKING TAB -->
+<div id="panel-ranking">
+  <div class="refresh-row">
+    <span class="last-updated" id="lastUpdated">Actualizando...</span>
+    <button class="refresh-btn" id="refreshBtn" onclick="loadAll()">
+      <span class="ri">🔄</span> Actualizar
+    </button>
+  </div>
+  <div class="lb-section">
+    <div class="lb-list" id="lbList"><div class="loading-state">⏳ Cargando datos del Sheet...</div></div>
+  </div>
+</div>
+
+
+
+<!-- REGLAS TAB -->
+<div id="panel-reglas" style="display:none">
+  <div class="rules-card" style="margin:14px 16px 0">
+    <div class="rules-title">📋 REGLAS DEL RANKING</div>
+    <div class="rule-row"><span class="rule-label">💎 1 Diamante cuenta grupal</span><span class="rule-pts pts-neutral">0.5 pts</span></div>
+    <div class="rule-row"><span class="rule-label">🔷 1 Diamante integrante GL</span><span class="rule-pts pts-neutral">0.3 pts</span></div>
+    <div class="rule-row"><span class="rule-label">🎯 Llegar a meta individual del manager<br><small style="color:var(--text-soft);font-size:10px">= suma de metas de todos sus grupos</small></span><span class="rule-pts pts-green">+1.000.000 pts</span></div>
+    <div class="rule-row"><span class="rule-label">🏆 Meta general del proyecto<br><small style="color:var(--text-soft);font-size:10px">= suma de metas de TODOS los grupos</small></span><span class="rule-pts pts-purple">+5.000.000 pts<br><small style="font-size:10px">a todos los managers</small></span></div>
+    <div class="rule-row"><span class="rule-label">📚 Capacitación semanal al proyecto</span><span class="rule-pts pts-blue">+500.000 pts</span></div>
+    <div class="rules-note">
+      <p>📅 <strong>Mayo 1 al Mayo 31, 2026</strong><br>• El bono de <strong>+1.000.000 pts</strong> es individual: solo lo recibe el manager que cumple su propia meta.<br>• El bono de <strong>+5.000.000 pts</strong> lo reciben TODOS los managers si la meta general del proyecto se cumple.<br>• Si un manager dicta 2 capacitaciones en la misma semana, solo cuenta una.</p>
+    </div>
+  </div>
+  <div class="prizes-section" style="margin-top:14px">
+    <div class="prizes-title">🏆 PREMIOS — TOP 3 MANAGERS</div>
+    <div class="prize-card gold-card">
+      <div class="prize-left"><div class="prize-medal-icon">🥇</div><div><div class="prize-rank-name">ORO — 1er lugar</div><div class="prize-desc">Bono para el manager ganador</div></div></div>
+      <div class="prize-amount">$200.000</div>
+    </div>
+    <div class="prize-card silver-card">
+      <div class="prize-left"><div class="prize-medal-icon">🥈</div><div><div class="prize-rank-name">PLATA — 2do lugar</div><div class="prize-desc">Bono para el manager ganador</div></div></div>
+      <div class="prize-amount">$150.000</div>
+    </div>
+    <div class="prize-card bronze-card">
+      <div class="prize-left"><div class="prize-medal-icon">🥉</div><div><div class="prize-rank-name">BRONCE — 3er lugar</div><div class="prize-desc">Bono para el manager ganador</div></div></div>
+      <div class="prize-amount">$100.000</div>
+    </div>
+    <p class="prize-note-txt">* Bonos en pesos COP. Se entregan únicamente si la meta general del proyecto (5.000.000 pts) es cumplida al cierre del mes.</p>
+  </div>
+  <div class="countdown-wrap">
+    <div class="cd-title">⏳ Tiempo restante del periodo</div>
+    <div class="cd-row">
+      <div class="cd-unit"><div class="cd-num" id="cdD">--</div><div class="cd-label">Días</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cdH">--</div><div class="cd-label">Horas</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cdM">--</div><div class="cd-label">Mins</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cdS">--</div><div class="cd-label">Segs</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────
+const CSV_MANAGERS       = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx0lnCwNWx-8P7F3-C75NT8DuFIrgAZGm_SfZ_Ozu7-LfB2MX5bhOFC9va0xGK7OGKhMDM7Q6Ovnxn/pub?gid=0&single=true&output=csv';
+const CSV_CREADORAS      = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx0lnCwNWx-8P7F3-C75NT8DuFIrgAZGm_SfZ_Ozu7-LfB2MX5bhOFC9va0xGK7OGKhMDM7Q6Ovnxn/pub?gid=1063780632&single=true&output=csv';
+const CSV_CAPACITACIONES = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSx0lnCwNWx-8P7F3-C75NT8DuFIrgAZGm_SfZ_Ozu7-LfB2MX5bhOFC9va0xGK7OGKhMDM7Q6Ovnxn/pub?gid=1477010353&single=true&output=csv';
+
+const GOAL_IND = 1000000, GOAL_GEN = 5000000, PT_TRAIN = 500000;
+const PT_DG = 0.5, PT_DM = 0.3;
+
+// ── CSV PARSER ───────────────────────────────────────────────────────────
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).map(line => {
+    // handle quoted fields
+    const cols = [];
+    let cur = '', inQ = false;
+    for (let c of line) {
+      if (c === '"') { inQ = !inQ; }
+      else if (c === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+      else { cur += c; }
+    }
+    cols.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (cols[i] || '').replace(/^"|"$/g,'').trim());
+    return obj;
+  }).filter(r => Object.values(r).some(v => v));
+}
+
+// ── FETCH CSV — intenta directo luego 4 proxies ──────────────────────────
+async function fetchWithProxy(url) {
+  const strategies = [
+    // 1. Directo (funciona si está en servidor o CORS abierto)
+    async () => {
+      const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (!r.ok) throw new Error('direct ' + r.status);
+      return r.text();
+    },
+    // 2. corsproxy.io
+    async () => {
+      const r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url), { signal: AbortSignal.timeout(8000) });
+      if (!r.ok) throw new Error('corsproxy ' + r.status);
+      return r.text();
+    },
+    // 3. allorigins
+    async () => {
+      const r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url), { signal: AbortSignal.timeout(8000) });
+      if (!r.ok) throw new Error('allorigins ' + r.status);
+      return r.text();
+    },
+    // 4. thingproxy
+    async () => {
+      const r = await fetch('https://thingproxy.freeboard.io/fetch/' + url, { signal: AbortSignal.timeout(8000) });
+      if (!r.ok) throw new Error('thingproxy ' + r.status);
+      return r.text();
+    },
+    // 5. htmldriven
+    async () => {
+      const r = await fetch('https://yacdn.org/proxy/' + url, { signal: AbortSignal.timeout(8000) });
+      if (!r.ok) throw new Error('yacdn ' + r.status);
+      return r.text();
+    },
+  ];
+  let lastErr;
+  for (const fn of strategies) {
+    try {
+      const text = await fn();
+      if (text && text.length > 5) return text;
+    } catch(e) { lastErr = e; }
+  }
+  throw new Error(lastErr?.message || 'Sin conexión');
+}
+
+async function fetchCSV(url) {
+  const text = await fetchWithProxy(url + '&t=' + Date.now());
+  return parseCSV(text);
+}
+
+// ── GET ISO WEEK ─────────────────────────────────────────────────────────
+function isoWeek(dateStr) {
+  const d = new Date(dateStr);
+  if (isNaN(d)) return null;
+  const tmp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = tmp.getUTCDay() || 7;
+  tmp.setUTCDate(tmp.getUTCDate() + 4 - day);
+  const y = tmp.getUTCFullYear();
+  const w = Math.ceil((((tmp - new Date(Date.UTC(y,0,1))) / 86400000) + 1) / 7);
+  return y + '-W' + String(w).padStart(2,'0');
+}
+
+// ── FORMAT NUMBER ────────────────────────────────────────────────────────
+function fmt(n) { return Math.round(n).toLocaleString('es-CO'); }
+
+// ── MAIN LOAD ────────────────────────────────────────────────────────────
+let allData = null;
+
+async function loadAll() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  document.getElementById('lastUpdated').textContent = 'Actualizando...';
+
+  try {
+    const [managers, creadoras, capacitaciones] = await Promise.all([
+      fetchCSV(CSV_MANAGERS),
+      fetchCSV(CSV_CREADORAS),
+      fetchCSV(CSV_CAPACITACIONES)
+    ]);
+
+    allData = { managers, creadoras, capacitaciones };
+    processAndRender(managers, creadoras, capacitaciones);
+
+    const now = new Date();
+    document.getElementById('lastUpdated').textContent =
+      'Actualizado: ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  } catch(e) {
+    const errMsg = `<div class="error-state">
+      ❌ <strong>No se pudieron cargar los datos</strong><br><br>
+      Posibles causas:<br>
+      • Estás abriendo el archivo desde el escritorio (file://)<br>
+      • El Sheet no está publicado como CSV<br>
+      • Sin conexión a internet<br><br>
+      <strong>Solución recomendada:</strong><br>
+      Sube el archivo a <a href="https://pages.github.com" target="_blank" style="color:#4F7FFF">GitHub Pages</a> o ábrelo desde un servidor.<br><br>
+      <small style="color:#999">Detalle: ${e.message}</small>
+    </div>`;
+    document.getElementById('lbList').innerHTML = errMsg;
+    document.getElementById('lastUpdated').textContent = '⚠️ Sin datos';
+  }
+
+  btn.classList.remove('spinning');
+}
+
+function processAndRender(managers, creadoras, capacitaciones) {
+  // ── 1. Agrupar managers — suma diamantes grupales y metas por manager
+  const managerMap = {};
+  managers.forEach(row => {
+    const name = (row['Nombre del Manager'] || row['Nombre Manager'] || '').trim();
+    const grupo = (row['Grupo Asociado'] || '').trim();
+    const diamGrupal = parseFloat(row['Diamantes Cuenta Grupal'] || 0) || 0;
+    const metaGrupo  = parseFloat(row['Meta del Grupo'] || row['Meta'] || 0) || 0;
+    if (!name) return;
+    if (!managerMap[name]) managerMap[name] = { name, grupos: [], diamGrupal: 0, metaInd: 0, diamCreadoras: 0 };
+    managerMap[name].grupos.push(grupo);
+    managerMap[name].diamGrupal += diamGrupal;  // diamantes cuenta grupal
+    managerMap[name].metaInd    += metaGrupo;   // meta en DIAMANTES
+  });
+
+  // ── 2. Meta general = suma de todas las metas en diamantes del Sheet
+  const GOAL_GEN_DYNAMIC = managers.reduce((s, row) =>
+    s + (parseFloat(row['Meta del Grupo'] || row['Meta'] || 0) || 0), 0);
+
+  // ── 3. Sumar diamantes de creadoras por manager
+  creadoras.forEach(row => {
+    const manager = (row['Manager'] || '').trim();
+    const diam    = parseFloat(row['Diamantes'] || 0) || 0;
+    if (manager && managerMap[manager]) managerMap[manager].diamCreadoras += diam;
+  });
+
+  // ── 4. Capacitaciones válidas (máx 1 por semana por manager)
+  const capByManager = {};
+  capacitaciones.forEach(row => {
+    const manager = (row['Manager'] || '').trim();
+    const fecha   = (row['Fecha'] || '').trim();
+    if (!manager || !fecha) return;
+    const week = isoWeek(fecha);
+    if (!week) return;
+    if (!capByManager[manager]) capByManager[manager] = new Set();
+    capByManager[manager].add(week);
+  });
+
+  // ── 5. Calcular score de cada manager
+  const resultsRaw = Object.values(managerMap).map(m => {
+    // Puntos del ranking
+    const ptsDG  = m.diamGrupal    * PT_DG;
+    const ptsDM  = m.diamCreadoras * PT_DM;
+    const semanas = capByManager[m.name] ? capByManager[m.name].size : 0;
+    const ptsCap = semanas * PT_TRAIN;
+    const base   = ptsDG + ptsDM + ptsCap;
+
+    // Meta individual: total diamantes del manager vs meta en diamantes del Sheet
+    const totalDiam = m.diamGrupal + m.diamCreadoras;
+    const cumpleMetaInd = m.metaInd > 0 && totalDiam >= m.metaInd;
+    const pctInd = m.metaInd > 0 ? Math.min(100, (totalDiam / m.metaInd) * 100) : 0;
+
+    return { ...m, ptsDG, ptsDM, ptsCap, semanas, base, totalDiam, cumpleMetaInd, pctInd };
+  });
+
+  // ── 6. Meta general: total diamantes de TODOS vs suma de metas en diamantes
+  const totalDiamTodos = resultsRaw.reduce((s, m) => s + m.totalDiam, 0);
+  const metaGenCumplida = GOAL_GEN_DYNAMIC > 0 && totalDiamTodos >= GOAL_GEN_DYNAMIC;
+  const totalBase = resultsRaw.reduce((s, m) => s + m.base, 0);
+
+  // ── 7. Score final con bonos
+  const results = resultsRaw.map(m => {
+    let score = m.base;
+    if (m.cumpleMetaInd) score += 1000000;  // +1M al manager que cumple su meta en diamantes
+    if (metaGenCumplida) score += 5000000;  // +5M a TODOS si meta general en diamantes cumplida
+    return { ...m, score: Math.round(score) };
+  });
+
+  results.sort((a, b) => b.score - a.score);
+
+  // ── 8. Stats UI
+  const pctGen = GOAL_GEN_DYNAMIC > 0 ? Math.min(100, (totalDiamTodos / GOAL_GEN_DYNAMIC) * 100) : 0;
+  document.getElementById('statManagers').textContent = results.length;
+  document.getElementById('statPct').textContent      = pctGen.toFixed(1) + '%';
+  document.getElementById('metaPct').textContent      = pctGen.toFixed(1) + '%';
+  document.getElementById('metaBar').style.width      = pctGen + '%';
+  document.getElementById('metaFootL').textContent    = '💎 ' + fmt(totalDiamTodos) + ' / ' + fmt(GOAL_GEN_DYNAMIC);
+  const footR = document.getElementById('metaFootR');
+  footR.textContent  = metaGenCumplida ? '✅ ¡Meta alcanzada! +5M a todos' : 'Meta: ' + fmt(GOAL_GEN_DYNAMIC) + ' 💎';
+  footR.style.color  = metaGenCumplida ? '#00876F' : 'var(--orange)';
+
+  // ── 9. Render ranking
+  const amts   = ['$200.000', '$150.000', '$100.000'];
+  const medals = ['🥇', '🥈', '🥉'];
+
+  if (!results.length) {
+    document.getElementById('lbList').innerHTML = '<div class="empty-state">💃 Sin datos en el Sheet aún.</div>';
+    return;
+  }
+
+  document.getElementById('lbList').innerHTML = results.map((m, pos) => {
+    const r  = pos + 1;
+    const rc = r <= 3 ? 'r' + r : '';
+    const bc = r <= 3 ? 'b' + r : 'bn';
+    const badge = r <= 3 ? medals[r - 1] : '#' + r;
+    const bonoBadge = (metaGenCumplida && r <= 3) ? `<span class="bono-chip">🎁 Bono ${amts[r - 1]}</span>` : '';
+    const indBadge  = m.cumpleMetaInd ? `<span class="meta-ind-chip">🎯 Meta cumplida ✅</span>` : '';
+    const metaLabel = m.metaInd > 0
+      ? `💎 ${fmt(m.totalDiam)} / ${fmt(m.metaInd)} · ${m.pctInd.toFixed(0)}%`
+      : '';
+    return `<div class="lb-row ${rc}">
+      <div class="lb-badge ${bc}">${badge}</div>
+      <div class="lb-info">
+        <div class="lb-name">${m.name}</div>
+        <div class="lb-groups">📍 ${m.grupos.filter(Boolean).join(', ') || '—'}</div>
+        ${metaLabel ? `<div class="lb-meta-progress">
+          <div class="lb-meta-track"><div class="lb-meta-fill" style="width:${m.pctInd}%"></div></div>
+          <span class="lb-meta-label">${metaLabel}</span>
+        </div>` : ''}
+        ${indBadge}${bonoBadge}
+      </div>
+      <div class="lb-score">
+        <div class="lb-pts">${fmt(m.score)} pts</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── 10. Render grupos (aunque la pestaña esté oculta, por si acaso)
+  if (document.getElementById('gruposList')) {
+    document.getElementById('gruposList').innerHTML = '';
+  }
+
+
+// countdown
+function updateCD() {
+  const end = new Date('2026-05-31T23:59:00Z');
+  let diff = Math.max(0, end - new Date());
+  const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+  const h = Math.floor(diff / 3600000); diff -= h * 3600000;
+  const m = Math.floor(diff / 60000); diff -= m * 60000;
+  const s = Math.floor(diff / 1000);
+  document.getElementById('cdD').textContent = String(d).padStart(2,'0');
+  document.getElementById('cdH').textContent = String(h).padStart(2,'0');
+  document.getElementById('cdM').textContent = String(m).padStart(2,'0');
+  document.getElementById('cdS').textContent = String(s).padStart(2,'0');
+}
+updateCD(); setInterval(updateCD, 1000);
+
+// auto-refresh cada 5 minutos
+loadAll();
+setInterval(loadAll, 5 * 60 * 1000);
+</script>
+</body>
+</html>
